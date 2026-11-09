@@ -15,9 +15,10 @@ export const Colors = {
   text: '#2A2540',
   textMuted: '#7A7499',
   textFaint: '#B0AAC8',
-  success: '#8FE0C0',
-  warning: '#FFE29A',
-  danger: '#FFB0BE',
+  success: '#2E9E75',
+  warning: '#B8860B',
+  danger: '#E54867',
+  dangerSoft: 'rgba(229,72,103,0.12)',
 } as const;
 /** Colores pastel para identificar cada rutina */
 export const RoutineColors = [

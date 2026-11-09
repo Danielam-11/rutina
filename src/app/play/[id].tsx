@@ -51,7 +51,6 @@ export default function Play() {
       setRoutine(r);
       if (r?.steps?.length) startStep(r, 0);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const steps = routine?.steps ?? [];

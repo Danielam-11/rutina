@@ -30,15 +30,15 @@ export function Button({ title, onPress, icon, variant = 'primary', colors, load
   };
 
   const isPrimary = variant === 'primary';
-  const labelColor = isPrimary ? '#FFFFFF' : variant === 'danger' ? Colors.danger : Colors.text;
+  const labelColor = isPrimary ? Colors.text : variant === 'danger' ? Colors.danger : Colors.text;
 
   const content = (
     <View style={styles.row}>
       {loading ? (
-        <ActivityIndicator color={isPrimary ? '#FFFFFF' : Colors.text} />
+        <ActivityIndicator color={labelColor} />
       ) : (
         <>
-          {icon ? <Text style={styles.icon}>{icon}</Text> : null}
+          {icon ? <Text style={[styles.icon, { color: labelColor }]}>{icon}</Text> : null}
           <Text style={[styles.label, { color: labelColor }]}>{title}</Text>
         </>
       )}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   ghost: { backgroundColor: Colors.surface, borderWidth: 1, borderColor: Colors.border },
-  dangerBg: { backgroundColor: 'rgba(255,176,190,0.22)', borderWidth: 1, borderColor: Colors.danger },
+  dangerBg: { backgroundColor: Colors.dangerSoft, borderWidth: 1, borderColor: Colors.danger },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   icon: { fontSize: 18 },
   label: { fontSize: 16, fontWeight: '700', letterSpacing: 0.2 },

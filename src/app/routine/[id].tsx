@@ -9,7 +9,16 @@ import { Button } from '@/components/button';
 import { Colors, DAY_LABELS, Radius, withAlpha } from '@/constants/colors';
 import { deleteRoutine, endTime, formatDuration, formatTime, getRoutine, totalDuration } from '@/lib/api';
 import { cancelRoutineReminders } from '@/lib/notifications';
-import type { Routine } from '@/lib/types';
+import type { Routine, Step } from '@/lib/types';
+
+function computeStepsWithTiming(steps: Step[] = []) {
+  let elapsed = 0;
+  return steps.map((s) => {
+    const startAt = elapsed;
+    elapsed += s.duration_sec;
+    return { ...s, startAt };
+  });
+}
 
 export default function RoutineDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -50,8 +59,7 @@ export default function RoutineDetail() {
   }
 
   const c = routine.color;
-  const steps = routine.steps ?? [];
-  let elapsed = 0;
+  const steps = computeStepsWithTiming(routine.steps);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.bg }}>
@@ -92,8 +100,6 @@ export default function RoutineDetail() {
           <Text style={styles.section}>Pasos</Text>
           {steps.length === 0 ? <Text style={styles.muted}>Esta rutina no tiene pasos todavía.</Text> : null}
           {steps.map((s, i) => {
-            const startAt = elapsed;
-            elapsed += s.duration_sec;
             return (
               <Animated.View key={s.id} entering={FadeInDown.delay(i * 50)} style={styles.step}>
                 <View style={styles.timeline}>
@@ -105,7 +111,7 @@ export default function RoutineDetail() {
                 <View style={{ flex: 1, paddingTop: 4 }}>
                   <Text style={styles.stepName}>{s.name}</Text>
                   <Text style={styles.stepMeta}>
-                    {startAt === 0 ? 'Inicio' : `+${formatDuration(startAt)}`} · {formatDuration(s.duration_sec)}
+                    {s.startAt === 0 ? 'Inicio' : `+${formatDuration(s.startAt)}`} · {formatDuration(s.duration_sec)}
                   </Text>
                 </View>
               </Animated.View>

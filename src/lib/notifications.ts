@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { isRunningInExpoGo, requireOptionalNativeModule } from 'expo';
 
 import { parseTime } from './api';
 import type { Routine } from './types';
@@ -9,6 +10,13 @@ let cached: NotificationsModule | null | undefined;
 function getNotifications(): NotificationsModule | null {
   if (cached !== undefined) return cached;
   if (Platform.OS === 'web') return (cached = null);
+
+  // En Expo Go o sin el módulo nativo compilado, expo-notifications falla al requerir ExpoApplication.
+  if (isRunningInExpoGo() || !requireOptionalNativeModule('ExpoApplication')) {
+    console.warn('[notifications] Notificaciones no disponibles en Expo Go (se requiere development build para soporte nativo).');
+    return (cached = null);
+  }
+
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const mod: NotificationsModule = require('expo-notifications');
